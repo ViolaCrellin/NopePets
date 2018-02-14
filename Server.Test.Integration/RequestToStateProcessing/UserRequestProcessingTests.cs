@@ -14,32 +14,22 @@ namespace Server.Test.Integration.RequestToStateProcessing
         [Test]
         public void Given_a_request_for_a_users_session_data_then_when_processed_returns_correct_data()
         {
-            var siteSitate = InitialiseSiteState();
-            
-            var sut = InitialiseUserSessionState(TestData.Users.MeJulie, siteSitate.ResponseBuilder);
-            var loginRequest = new SiteRequest<ISiteData>()
-            {
-                RequestParams = TestData.Users.MeJuliesLogin,
-                RequestType = RequestType.Read
-            };
-
-            IResponse loginResponse;
-            siteSitate.ProcessRequest(loginRequest, out loginResponse);
+            var sut = SetupMockMeJulieLogin();
             var request = new UserSessionRequest<IUserSessionData>()
             {
                 RequestType = RequestType.ReadAll,
-                RequestParams = null
+                RequestParams = null,
+                UserId = TestData.Users.MeJulie.UserId
             };
-
-            User foundUser = TestData.Users.MeJulie;
-            MockUsers.Setup(m => m.TryFindUserByEmail(TestData.Users.MeJuliesLogin.Email, out foundUser)).Returns(true);
-
-            Assert.IsNull(loginResponse.Error);
 
             IResponse response;
             var result = sut.ProcessRequest(request, out response);
 
-            Assert.IsFalse(result);
+            Assert.IsTrue(result);
+
+            Assert.IsNotNull(response as UserSessionResponse);
+            var responseData = (response as UserSessionResponse).UserSession;
+            AssertMeJuliesSessionDataIsCorrect(responseData);
 
         }
 

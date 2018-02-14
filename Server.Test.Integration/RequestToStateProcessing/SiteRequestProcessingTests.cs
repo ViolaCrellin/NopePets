@@ -164,38 +164,8 @@ namespace Server.Test.Integration.RequestToStateProcessing
             Assert.IsTrue(result);
             Assert.IsNotNull(response as UserSessionResponse);
             var responseData = (response as UserSessionResponse).UserSession;
-
-            Assert.IsNotNull(responseData);
-            Assert.IsInstanceOf<UserSession>(responseData);
             Assert.AreEqual(1, sut.GetUserSessions().Count);
-
-            var userPets = responseData.Pets;
-            Assert.AreEqual(2, userPets.Count);
-
-            var expectedInteractions = new List<Interaction>();
-                expectedInteractions.AddRange(TestData.Interactions.ConfidenceInteractions);
-                expectedInteractions.AddRange(TestData.Interactions.HungerInteractions);
-
-            var expectedMetricInteractions = new List<MetricInteraction>();
-            expectedMetricInteractions.AddRange(TestData.Interactions.ConfidenceMetricInteractions);
-            expectedMetricInteractions.AddRange(TestData.Interactions.HungerMetricInteractions);
-
-            var expectedPetMetrics = new List<PetMetric>();
-            expectedPetMetrics.AddRange(TestData.UsersPets.BurberryPetMetrics);
-            expectedPetMetrics.AddRange(TestData.UsersPets.VersacePetMetrics);
-
-            var expectedMetrics = new List<Metric>()
-            {
-                TestData.AnimalMetrics.Confidence,
-                TestData.AnimalMetrics.Hunger
-            };
-
-            Assert.Multiple(() => AssertUserPetsAreCorrect(
-                actualUserPets: userPets,
-                expectedUserPets: TestData.UsersPets.MeJuliesPets,
-                owner: TestData.Users.MeJulie, expectedInteractions: expectedInteractions,
-                expectedAnimalMetrics: TestData.AnimalMetrics.ChihuahuaMetrics,
-                expectedMetricInteractions: expectedMetricInteractions, expectedPetMetrics: expectedPetMetrics, expectedMetrics: expectedMetrics));
+            AssertMeJuliesSessionDataIsCorrect(responseData);
         }
 
         

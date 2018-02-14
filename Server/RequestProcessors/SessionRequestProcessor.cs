@@ -58,6 +58,7 @@ namespace Server.RequestProcessors
                 case RequestType.Delete:
                     return TryDeleteRecord(request.RequestParams, out response);
                 case RequestType.Read:
+                case RequestType.ReadAll:
                 {
                     //There's no real processing to do here
                     response = null;

@@ -7,7 +7,10 @@ using Server.Configuration;
 using Server.Database.DataPersisters;
 using Server.Database.DataProviders;
 using Server.MasterData.DTO.Data.CrossService;
+using Server.MasterData.DTO.Data.Site;
 using Server.MasterData.DTO.Data.User;
+using Server.MasterData.DTO.Request;
+using Server.MasterData.DTO.Response;
 using Server.MasterData.Model;
 using Server.RequestProcessors;
 using Server.State;
@@ -79,6 +82,28 @@ namespace Server.Test.Integration.RequestToStateProcessing
                 Container.UserSessionContainer);
         }
 
+        internal UserSessionState SetupMockMeJulieLogin()
+        {
+            var siteSitate = InitialiseSiteState();
+
+            var sut = InitialiseUserSessionState(TestData.Users.MeJulie, siteSitate.ResponseBuilder);
+            var loginRequest = new SiteRequest<ISiteData>()
+            {
+                RequestParams = TestData.Users.MeJuliesLogin,
+                RequestType = RequestType.Read
+            };
+
+            User foundUser = TestData.Users.MeJulie;
+            MockUsers.Setup(m => m.TryFindUserByEmail(TestData.Users.MeJuliesLogin.Email, out foundUser)).Returns(true);
+            MockUsers.Setup(m => m.GetUserByEmail(TestData.Users.MeJuliesLogin.Email)).Returns(TestData.Users.MeJulie);
+            SetupMockUserSessionData();
+
+            IResponse loginResponse;
+            siteSitate.ProcessRequest(loginRequest, out loginResponse);
+            Assert.AreEqual(1, siteSitate.GetUserSessions().Count);
+            Assert.IsNull(loginResponse.Error);
+            return sut;
+        }
 
         /// <summary>
         /// Test User is Ali G's Me Julie. Don't ask why.
@@ -134,6 +159,40 @@ namespace Server.Test.Integration.RequestToStateProcessing
             var hungerFeedTreat = TestData.Interactions.HungerFeedTreat;
             MockInteractions.Setup(m => m.Find(hungerFeedTreat.InteractionId))
                 .Returns(TestData.Interactions.FeedTreat);
+        }
+
+        internal void AssertMeJuliesSessionDataIsCorrect(UserSession responseData)
+        {
+            Assert.IsNotNull(responseData);
+            Assert.IsInstanceOf<UserSession>(responseData);
+
+            var userPets = responseData.Pets;
+            Assert.AreEqual(2, userPets.Count);
+
+            var expectedInteractions = new List<Interaction>();
+            expectedInteractions.AddRange(TestData.Interactions.ConfidenceInteractions);
+            expectedInteractions.AddRange(TestData.Interactions.HungerInteractions);
+
+            var expectedMetricInteractions = new List<MetricInteraction>();
+            expectedMetricInteractions.AddRange(TestData.Interactions.ConfidenceMetricInteractions);
+            expectedMetricInteractions.AddRange(TestData.Interactions.HungerMetricInteractions);
+
+            var expectedPetMetrics = new List<PetMetric>();
+            expectedPetMetrics.AddRange(TestData.UsersPets.BurberryPetMetrics);
+            expectedPetMetrics.AddRange(TestData.UsersPets.VersacePetMetrics);
+
+            var expectedMetrics = new List<Metric>()
+            {
+                TestData.AnimalMetrics.Confidence,
+                TestData.AnimalMetrics.Hunger
+            };
+
+            Assert.Multiple(() => AssertUserPetsAreCorrect(
+                actualUserPets: userPets,
+                expectedUserPets: TestData.UsersPets.MeJuliesPets,
+                owner: TestData.Users.MeJulie, expectedInteractions: expectedInteractions,
+                expectedAnimalMetrics: TestData.AnimalMetrics.ChihuahuaMetrics,
+                expectedMetricInteractions: expectedMetricInteractions, expectedPetMetrics: expectedPetMetrics, expectedMetrics: expectedMetrics));
         }
 
         /// <summary>

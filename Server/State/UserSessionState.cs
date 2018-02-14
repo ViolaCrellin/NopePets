@@ -90,7 +90,12 @@ namespace Server.State
             if (!_sessionRequestProcessor.TryProcess(request, out response) && response != null)
                 return false;
 
-             ApplyToState(request.RequestType, response);
+            var requestType = request.RequestType;
+            if (requestType == RequestType.ReadAll || requestType == RequestType.Read)
+                response = ReadFromState(request);
+            else
+                ApplyToState(requestType, response);
+
             return true;
         }
 
@@ -111,6 +116,23 @@ namespace Server.State
                     return;
             }
         }
+
+        private IResponse ReadFromState(IUserSessionRequest<IUserSessionData> request)
+        {
+            if (request.RequestParams is UserSession)
+            {
+                var sessionData = GetUserSession();
+                return new UserSessionResponse().SetSuccessResponse(sessionData);
+            }
+            var error = new ErrorMessage(ErrorCode.UserSessionNotFound);
+            return new UserSessionResponse().SetErrorResponse(error);
+        }
+
+        private void ReadAllFromState()
+        {
+
+        }
+
 
         private void UpdateState(IResponse response)
         {
