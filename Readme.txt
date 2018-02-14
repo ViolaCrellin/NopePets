@@ -1,6 +1,6 @@
 About
 REST API using WCF based on Neopets a website to which I lost a lot of my time growing up and tickles my nostalgia bone. 
-Except, for legal reasons, it is called NopePets, and partly as a hommage to a colleage who pronounces 'Nope' as 'NeeeoP'
+Except, for legal reasons, it is called NopePets, and partly as a hommage to a colleague who pronounces 'Nope' as 'NeeeoP'
 
 The technology stack chosen was more regarding what represented more of a learning opportunity than anything else. There are probably much more suitable frameworks to choose but I just felt like learning something different.
 
