@@ -31,7 +31,11 @@ namespace Server.Test.Integration.RequestToStateProcessing
         internal Mock<IRepository<Metric, MetricInteraction>> MockMetrics;
         internal Mock<IDataProvider<User>> MockUserDataProvider;
         internal Mock<IRecordPersister<User>> MockUserPersister;
+        internal Mock<IRecordPersister<Pet>> MockPetPersister;
+        internal Mock<IRecordPersister<PetMetric>> MockPetMetricPersister;
+        internal Mock<IRecordPersister<UserPet>> MockUserPetPersister;
         internal Container Container;
+        internal Mock<IContainer> MockContainer;
 
         [SetUp]
         public void SetUp()
@@ -53,6 +57,10 @@ namespace Server.Test.Integration.RequestToStateProcessing
             MockUserDataProvider = new Mock<IDataProvider<User>>();
             MockUserDataProvider.Setup(m => m.LoadAllColumns()).Returns(TestData.Columns.UserColumns);
             MockUserPersister = new Mock<IRecordPersister<User>>();
+            MockPetPersister = new Mock<IRecordPersister<Pet>>();
+            MockUserPetPersister = new Mock<IRecordPersister<UserPet>>();
+            MockPetMetricPersister = new Mock<IRecordPersister<PetMetric>>();
+            MockPetPersister.As<IRecordPersister>();
 
             Config = new TestConfiguration();
             Container = new Container(Config);
@@ -63,9 +71,14 @@ namespace Server.Test.Integration.RequestToStateProcessing
             SiteState.IsInitalised = false;
             ResponseBuilder.IsInitialised = false;
 
+            MockContainer = new Mock<IContainer>();
+            MockContainer.Setup(m => m.RecordPersister<Pet>()).Returns(MockPetPersister.Object);
+            MockContainer.Setup(m => m.RecordPersister<PetMetric>()).Returns(MockPetMetricPersister.Object);
+            MockContainer.Setup(m => m.RecordPersister<UserPet>()).Returns(MockUserPetPersister.Object);
+
             return SiteState.Initialise(Config, MockUsers.Object, MockPets.Object, MockAnimals.Object,
                 MockInteractions.Object, MockMetrics.Object, MockUserDataProvider.Object,
-                new SiteRequestProcessor(MockUserPersister.Object), Container.UserSessionContainer);
+                new SiteRequestProcessor(MockUserPersister.Object), MockContainer.Object);
         }
 
         internal UserSessionState InitialiseUserSessionState(User user, ResponseBuilder responseBuilder)
@@ -75,21 +88,18 @@ namespace Server.Test.Integration.RequestToStateProcessing
 
             if(Container == null)
                 Container = new Container(new TestConfiguration());
-            //var responseBuilder = ResponseBuilder.Initialise(MockAnimals.Object, MockMetrics.Object, MockPets.Object, MockInteractions.Object);
 
             return UserSessionState.Initialise(user, MockUsers.Object, MockPets.Object, MockAnimals.Object,
                 MockInteractions.Object, Config, responseBuilder.UserSessionBuilder,
-                Container.UserSessionContainer);
+                MockContainer.Object);
         }
 
         internal UserSessionState SetupMockMeJulieLogin()
         {
             var siteSitate = InitialiseSiteState();
-
-            var sut = InitialiseUserSessionState(TestData.Users.MeJulie, siteSitate.ResponseBuilder);
             var loginRequest = new SiteRequest<ISiteData>()
             {
-                RequestParams = TestData.Users.MeJuliesLogin,
+                Payload = TestData.Users.MeJuliesLogin,
                 RequestType = RequestType.Read
             };
 
@@ -102,8 +112,11 @@ namespace Server.Test.Integration.RequestToStateProcessing
             siteSitate.ProcessRequest(loginRequest, out loginResponse);
             Assert.AreEqual(1, siteSitate.GetUserSessions().Count);
             Assert.IsNull(loginResponse.Error);
-            return sut;
+
+            return siteSitate.GetUserSessions().First();
         }
+
+
 
         /// <summary>
         /// Test User is Ali G's Me Julie. Don't ask why.
@@ -131,6 +144,7 @@ namespace Server.Test.Integration.RequestToStateProcessing
             var chihuahuaMetrics = TestData.AnimalMetrics.ChihuahuaMetrics;
             MockAnimals.Setup(m => m.Find(chihuahua.AnimalId)).Returns(chihuahua);
             MockAnimals.Setup(m => m.FindAssociated(chihuahua)).Returns(chihuahuaMetrics);
+
 
             var confidenceMetric = TestData.AnimalMetrics.Confidence;
             var hungerMetric = TestData.AnimalMetrics.Hunger;
@@ -169,6 +183,11 @@ namespace Server.Test.Integration.RequestToStateProcessing
             var userPets = responseData.Pets;
             Assert.AreEqual(2, userPets.Count);
 
+            AssertMeJuliesPetDataIsCorrect(userPets);
+        }
+
+        internal void AssertMeJuliesPetDataIsCorrect(IList<NopePet> pets)
+        {
             var expectedInteractions = new List<Interaction>();
             expectedInteractions.AddRange(TestData.Interactions.ConfidenceInteractions);
             expectedInteractions.AddRange(TestData.Interactions.HungerInteractions);
@@ -187,13 +206,15 @@ namespace Server.Test.Integration.RequestToStateProcessing
                 TestData.AnimalMetrics.Hunger
             };
 
+
             Assert.Multiple(() => AssertUserPetsAreCorrect(
-                actualUserPets: userPets,
+                actualUserPets: pets,
                 expectedUserPets: TestData.UsersPets.MeJuliesPets,
                 owner: TestData.Users.MeJulie, expectedInteractions: expectedInteractions,
                 expectedAnimalMetrics: TestData.AnimalMetrics.ChihuahuaMetrics,
                 expectedMetricInteractions: expectedMetricInteractions, expectedPetMetrics: expectedPetMetrics, expectedMetrics: expectedMetrics));
         }
+
 
         /// <summary>
         /// Cascading assert where all the inner objects of a User's NopePet are asserted against for presence, count and values

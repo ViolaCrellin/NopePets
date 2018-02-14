@@ -15,6 +15,7 @@ namespace Server.Database.DataPersisters
     public interface IRecordPersister<T> : IRecordPersister
     {
         bool TryPersist(ref T data, out ErrorMessage error);
+        bool TryPersistUpdate(T petMetric, out ErrorMessage error);
     }
 
     //Todo = we could change this structurally so we have record persisters of different types based on key constraints

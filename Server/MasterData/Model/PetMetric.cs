@@ -10,7 +10,7 @@ namespace Server.MasterData.Model
     public class PetMetric : IDatabaseJoinRow
     {
         public int PetId { get; }
-        public int MetricId { get; }
+        public int MetricId { get; set; }
         public int Value { get; }
         public DateTime LastInteractionTime { get; }
 

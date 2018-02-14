@@ -36,7 +36,7 @@ namespace Server
 
             var sessionRequest = new UserSessionRequest<IUserSessionData>()
             {
-                RequestParams = payload,
+                Payload = payload,
                 RequestType = RequestType.Update,
                 UserId = userId
             };

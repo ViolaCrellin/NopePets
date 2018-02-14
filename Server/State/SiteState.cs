@@ -29,7 +29,7 @@ namespace Server.State
         private readonly IRepository<Pet, PetMetric> _pets;
         private readonly IRepository<Animal, AnimalMetric> _animals;
         private readonly IRepository<Interaction, MetricInteraction> _interactions;
-        private readonly UserSessionContainer _userSessionContainer;
+        private readonly IContainer _userSessionContainer;
 
         public static bool IsInitalised { get; set; }
 
@@ -42,8 +42,8 @@ namespace Server.State
             IRepository<Animal, AnimalMetric> animals, IRepository<Interaction, MetricInteraction> interactions,
             ISiteRequestProcessor processor,
             ISiteRequestValidator siteRequestValidator, IConfiguration config,
-            ResponseBuilder responseBuilder, 
-            UserSessionContainer userSessionContainer)
+            ResponseBuilder responseBuilder,
+            IContainer userSessionContainer)
         {
             _gameState = gameState;
             _currentUserSessions = new List<UserSessionState>();
@@ -64,11 +64,11 @@ namespace Server.State
         /// Usually I would use Autofac for this - but it wasn't compatible with WCF without the SVC file.
         /// I opted to not use an SVC file because I like to be able to explicitly state my routes to ensure they are REST
         /// </summary>
-        public static SiteState Initialise(IConfiguration config, IRepository<User, UserPet> users, 
+        public static SiteState Initialise(IConfiguration config, IRepository<User, UserPet> users,
             IRepository<Pet, PetMetric> pets, IRepository<Animal, AnimalMetric> animals,
             IRepository<Interaction, MetricInteraction> interactions,
             IRepository<Metric, MetricInteraction> metrics, IDataProvider<User> userDataProvider,
-            ISiteRequestProcessor requestProcessor, UserSessionContainer userSessionContainer)
+            ISiteRequestProcessor requestProcessor, IContainer userSessionContainer)
         {
             if (IsInitalised)
             {
@@ -100,11 +100,15 @@ namespace Server.State
                 return false;
             }
 
-            if (!_processor.TryProcess(request.RequestType, request.RequestParams, out response) && response != null)
+            if (!_processor.TryProcess(request.RequestType, request.Payload, out response) && response != null)
                 return false;
 
-            if (request.RequestType == RequestType.Read)
-                return TryReadFromState(request.RequestParams, out response);
+            if (request.RequestType == RequestType.Read || request.RequestType == RequestType.ReadAll)
+            {
+                return TryReadFromState(request.Payload ?? (ISiteData) Activator.CreateInstance(request.PayloadType),
+                    out response);
+            }
+
 
             return TryApplyToState(request, response);
         }
@@ -146,9 +150,11 @@ namespace Server.State
         private bool TryReadFromState(ISiteData requestData, out IResponse response)
         {
             if (requestData is UserCredentials)
-                return TryLogin((UserCredentials)requestData, out response);
+            {
+                return TryLogin((UserCredentials) requestData, out response);
+            }
 
-            //Todo fix - should be an error message here
+
             response = null;
             return false;
         }
@@ -185,9 +191,9 @@ namespace Server.State
             //But just in case we should check for null
             if (foundUser != null)
             {
-                var userSessionState = UserSessionState.Initialise(foundUser, _users, _pets, _animals, _interactions, 
+                var userSessionState = UserSessionState.Initialise(foundUser, _users, _pets, _animals, _interactions,
                     _config,
-                    ResponseBuilder.UserSessionBuilder, 
+                    ResponseBuilder.UserSessionBuilder,
                     _userSessionContainer);
 
                 _currentUserSessions.Add(userSessionState);

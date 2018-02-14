@@ -26,6 +26,11 @@ namespace Server.Util
             return new PetMetric(petVital.PetId, petVital.PetVitalId, petVital.Health, petVital.LastTimeCaredFor);
         }
 
+        public static PetMetric ToNewPetMetricModel(this PetVital petVital)
+        {
+            return new PetMetric(petVital.PetId, petVital.PetVitalId, petVital.Health, petVital.LastTimeCaredFor);
+        }
+
         public static UserPet ToUserPetModel(this NopePet pet)
         {
             return new UserPet(pet.Owner.UserId, pet.PetId, pet.Birthday);
@@ -91,6 +96,11 @@ namespace Server.Util
         public static Pet ToPetModel(this NopePet nopePet)
         {
             return new Pet(nopePet.PetId, nopePet.Species.SpeciesId, nopePet.PetName);
+        }
+
+        public static Pet ToNewPetModel(this NopePet nopePet)
+        {
+            return new Pet(nopePet.SpeciesId, nopePet.PetName);
         }
 
 

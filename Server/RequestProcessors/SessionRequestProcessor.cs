@@ -17,9 +17,9 @@ namespace Server.RequestProcessors
     /// </summary>
     public class SessionRequestProcessor : ISessionRequestProcessor
     {
-        private readonly PetPersister _petPersister;
-        private readonly PetMetricPersister _petMetricPersister;
-        private readonly UserPetPersister _userPetPersister;
+        private readonly IRecordPersister<Pet> _petPersister;
+        private readonly IRecordPersister<PetMetric> _petMetricPersister;
+        private readonly IRecordPersister<UserPet> _userPetPersister;
         private readonly UserSessionBuilder _userSessionBuilder;
         private readonly User _user;
         private readonly IRepository<User, UserPet> _users;
@@ -28,7 +28,7 @@ namespace Server.RequestProcessors
 
         public SessionRequestProcessor(User user,
             IRepository<User, UserPet> users, IRepository<Pet, PetMetric> pets, IRepository<Interaction, MetricInteraction> interactionRepository,
-            PetPersister petPersister, UserPetPersister userPetPersister, PetMetricPersister petMetricPersister,
+            IRecordPersister<Pet> petPersister, IRecordPersister<UserPet> userPetPersister, IRecordPersister<PetMetric> petMetricPersister,
             UserSessionBuilder userSessionBuilder)
         {
             _user = user;
@@ -52,11 +52,11 @@ namespace Server.RequestProcessors
             switch (request.RequestType)
             {
                 case RequestType.Create:
-                    return TryPersistRecord(request.RequestParams, out response);
+                    return TryPersistRecord(request.Payload, out response);
                 case RequestType.Update:
-                    return TryUpdateRecord(request.RequestParams, out response);
+                    return TryUpdateRecord(request.Payload, out response);
                 case RequestType.Delete:
-                    return TryDeleteRecord(request.RequestParams, out response);
+                    return TryDeleteRecord(request.Payload, out response);
                 case RequestType.Read:
                 case RequestType.ReadAll:
                 {
@@ -131,7 +131,7 @@ namespace Server.RequestProcessors
 
         private bool TryCreateNewPetDbRecord(NopePet requestData, out IResponse response)
         {
-            var newPet = requestData.ToPetModel();
+            var newPet = requestData.ToNewPetModel();
 
             ErrorMessage errorMessage;
             if (!_petPersister.TryPersist(ref newPet, out errorMessage))

@@ -89,7 +89,7 @@
     <Compile Include="RequestToStateProcessing\SiteRequestProcessingTests.cs" />
     <Compile Include="Database\PersisterProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestToStateProcessing\UserRequestProcessingTests.cs" />
+    <Compile Include="RequestToStateProcessing\SessionRequestProcessingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Server.TestingShared\Server.TestingShared.csproj">

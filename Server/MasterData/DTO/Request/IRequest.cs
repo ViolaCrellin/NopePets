@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Server.MasterData.DTO.Request
 {
@@ -20,16 +21,23 @@ namespace Server.MasterData.DTO.Request
     public interface IRequest<T>
     {
         RequestType RequestType { get; set; }
-        T RequestParams { get; set; }
+        T Payload { get; set; }
+        Type PayloadType { get; set; }
     }
 
     [DataContract]
     public class Request<T> : IRequest<T>
     {
-        public RequestType RequestType { get; set; }
-
         [DataMember]
-        public T RequestParams { get; set; }
+        public T Payload { get; set; }
+
+        public Type PayloadType
+        {
+            get { return typeof(T); }
+            set { value = typeof(T); }
+        }
+
+        public RequestType RequestType { get; set; }
     }
 
 }

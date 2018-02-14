@@ -29,7 +29,7 @@ namespace Server.Validation.UserSession
         public bool IsValid(IUserSessionRequest<IUserSessionData> request, out ErrorMessage errorMessage)
         {
             errorMessage = null;
-            var requestData = request.RequestParams;
+            var requestData = request.Payload;
             var requestUserId = request.UserId;
 
             if (!requestUserId.HasValue || requestUserId != _user.UserId)
@@ -46,7 +46,7 @@ namespace Server.Validation.UserSession
 
             if (requestData is NopePet)
             {
-                return _petRegistrationValidator.IsValid(_user, (NopePet) request.RequestParams, out errorMessage);
+                return _petRegistrationValidator.IsValid(_user, (NopePet) request.Payload, out errorMessage);
             }
 
             if (requestData is UserPetCareAction)

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using Server.MasterData.DTO.Data.CrossService;
 using Server.MasterData.DTO.Data.User;
 using Server.MasterData.Model;
@@ -14,14 +15,18 @@ namespace Server.MasterData.DTO.Request
     }
 
     [DataContract]
-    public class UserSessionRequest<T> : IUserSessionRequest<T>
+    public class UserSessionRequest<T> : IUserSessionRequest<IUserSessionData>
     {
         [DataMember]
-        public RequestType RequestType { get; set; }
-        [DataMember]
-        public T RequestParams { get; set; }
+        public IUserSessionData Payload { get; set; }
         [DataMember]
         public int? UserId { get; set; }
+
+        //Not necessary for client to supply. These are inferred from the API routes and used 
+        // to make processing flow easier
+        public Type PayloadType { get; set; }
+
+        public RequestType RequestType { get; set; }
     }
 
     [DataContract]

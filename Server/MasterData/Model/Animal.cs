@@ -24,6 +24,14 @@ namespace Server.MasterData.Model
             Description = description;
         }
 
+        private Animal(string speciesName, string description)
+        {
+            SpeciesName = speciesName;
+            Description = description;
+        }
+
+        public static Animal NewAnimal(string speciesName, string description) => new Animal(speciesName, description);
+
         public static Func<IDataReader, Animal> ToDomainConverter
         {
             get

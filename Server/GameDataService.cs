@@ -14,7 +14,7 @@ namespace Server
             var request = new GameDataRequest<IGameData>()
             {
                 RequestType = RequestType.Read,
-                RequestParams = null
+                Payload = null
             };
 
             IResponse response;

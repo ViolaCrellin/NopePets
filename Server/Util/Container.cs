@@ -11,20 +11,27 @@ using Server.Storage;
 
 namespace Server.Util
 {
+    public interface IContainer
+    {
+        IRecordPersister<T> RecordPersister<T>();
 
+    }
 
     public class Container
     {
         public IList<IDataProvider> DataProviders { get; }
+        public IList<IRecordPersister> Persisters { get; }
         public UserSessionContainer UserSessionContainer { get; }
+        public GameDataContainer GameDataContainer { get; }
         private readonly IConfiguration _config;
 
         public Container(IConfiguration config)
         {
             _config = config;
+            var userDataProvider = new DataProvider<User>(config, User.ToDomainConverter);
             DataProviders = new List<IDataProvider>()
             {
-                new DataProvider<User>(config, User.ToDomainConverter),
+                userDataProvider,
                 new DataProvider<UserPet>(config, UserPet.ToDomainConverter),
                 new DataProvider<Pet>(config, Pet.ToDomainConverter),
                 new DataProvider<PetMetric>(config, PetMetric.ToDomainConverter),
@@ -34,7 +41,13 @@ namespace Server.Util
                 new DataProvider<MetricInteraction>(config, MetricInteraction.ToDomainConverter),
                 new DataProvider<Interaction>(config, Interaction.ToDomainConverter),
             };
+
+            Persisters = new List<IRecordPersister>()
+            {
+                new UserPersister(userDataProvider.LoadAllColumns(), _config)
+            };
             UserSessionContainer = new UserSessionContainer(this, config);
+            GameDataContainer = new GameDataContainer(this, config);
         }
 
 
@@ -53,18 +66,19 @@ namespace Server.Util
         }
 
 
-        public IRecordPersister<User> UserRecordPersister()
+        public IRecordPersister<T> RecordPersister<T>()
         {
-            var userDataProvider =
-                (IDataProvider<User>)DataProviders.First(provider =>
-                    provider.GetType().GenericTypeArguments[0] == typeof(User));
-            return new UserPersister(userDataProvider.LoadAllColumns(), _config);
+            return (IRecordPersister<T>) Persisters.First(persister =>
+            {
+                var memberInfo = persister.GetType().BaseType;
+                return memberInfo != null && memberInfo.GenericTypeArguments[0] == typeof(T);
+            });
         }
 
 
         public ISiteRequestProcessor SiteRequestProcessor()
         {
-            return new SiteRequestProcessor(UserRecordPersister());
+            return new SiteRequestProcessor(RecordPersister<User>());
         }
 
     }

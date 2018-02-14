@@ -109,6 +109,8 @@ namespace Server.Test.Integration
 
             public static Animal Chihuahua = new Animal(ChihuahuaAnimalId, "Chihuahua - Dog",
                 "The perfect little companion and fashion accessory, although be warned they can get yappy.");
+
+            public static Animal NewChihuahua = Animal.NewAnimal(Chihuahua.SpeciesName, Chihuahua.Description);
         }
 
         public static class UsersPets

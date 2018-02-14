@@ -14,16 +14,16 @@ namespace Server.MasterData.DTO.Request
     /// </summary>
     public interface IGameDataRequest<T> : IRequest<T>
     {
-
+        int? AdminId { get; set; }
     }
 
     [DataContract]
-    public class GameDataRequest<T> : IGameDataRequest<T>
+    public class GameDataRequest<T> : IGameDataRequest<IGameData>
     {
-        [DataMember]
         public RequestType RequestType { get; set; }
-        [DataMember]
-        public T RequestParams { get; set; }
+        public IGameData Payload { get; set; }
+        public Type PayloadType { get; set; }
+        public int? AdminId { get; set; }
     }
 
 
@@ -35,6 +35,6 @@ namespace Server.MasterData.DTO.Request
 //            RequestType = requestType;
 //        }
 //
-//        public GameData RequestParams { get; set; }
+//        public GameData Payload { get; set; }
 //    }
 }

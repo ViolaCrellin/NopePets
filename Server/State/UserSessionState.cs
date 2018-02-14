@@ -4,6 +4,7 @@ using System.Linq;
 using Server.Builders;
 using Server.Configuration;
 using Server.Database.DataPersisters;
+using Server.MasterData.DTO.Data.Site;
 using Server.MasterData.DTO.Data.User;
 using Server.MasterData.DTO.Request;
 using Server.MasterData.DTO.Response;
@@ -32,7 +33,8 @@ namespace Server.State
         private readonly IUserSessionRequestValidator _validator;
         private readonly ISessionRequestProcessor _sessionRequestProcessor;
 
-        private UserSessionState(User user, IRepository<User, UserPet> userRepository, IRepository<Pet, PetMetric> petRepository,
+        private UserSessionState(User user, IRepository<User, UserPet> userRepository,
+            IRepository<Pet, PetMetric> petRepository,
             IUserSessionRequestValidator validator, ISessionRequestProcessor sessionRequestProcessor)
         {
             User = user;
@@ -53,14 +55,16 @@ namespace Server.State
         public static UserSessionState Initialise(User user, IRepository<User, UserPet> userRepository,
             IRepository<Pet, PetMetric> petRepository, IRepository<Animal, AnimalMetric> animalRepository,
             IRepository<Interaction, MetricInteraction> interactionRepository, IConfiguration config,
-            UserSessionBuilder userSessionBuilder, UserSessionContainer container)
+            UserSessionBuilder userSessionBuilder, IContainer container)
         {
             //Validator
-            var petRegistrationValidator = new PetRegistrationValidator(animalRepository, petRepository, userRepository);
+            var petRegistrationValidator =
+                new PetRegistrationValidator(animalRepository, petRepository, userRepository);
 
             var petCareActionValidator =
                 new PetCareActionValidator(petRepository, interactionRepository);
-            var validator = new UserSessionRequestValidator(user, userRepository, petRepository, petRegistrationValidator, petCareActionValidator);
+            var validator = new UserSessionRequestValidator(user, userRepository, petRepository,
+                petRegistrationValidator, petCareActionValidator);
 
             //Persisters
             var petPersister = container.RecordPersister<Pet>();
@@ -69,8 +73,9 @@ namespace Server.State
 
             //Processor
             var sessionRequestProcessor = new SessionRequestProcessor(user, userRepository, petRepository,
-                interactionRepository, (PetPersister)petPersister, (UserPetPersister)userPetPersister, (PetMetricPersister)petMetricPersister, userSessionBuilder);
-           return new UserSessionState(user, userRepository, petRepository, validator, sessionRequestProcessor);
+                interactionRepository, petPersister, userPetPersister,
+                petMetricPersister, userSessionBuilder);
+            return new UserSessionState(user, userRepository, petRepository, validator, sessionRequestProcessor);
         }
 
         public UserSession GetUserSession()
@@ -91,8 +96,14 @@ namespace Server.State
                 return false;
 
             var requestType = request.RequestType;
-            if (requestType == RequestType.ReadAll || requestType == RequestType.Read)
-                response = ReadFromState(request);
+
+            if (request.RequestType == RequestType.Read || request.RequestType == RequestType.ReadAll)
+            {
+                response = ReadFromState(request.Payload ??
+                                         (IUserSessionData) Activator.CreateInstance(request.PayloadType));
+            }
+
+
             else
                 ApplyToState(requestType, response);
 
@@ -107,32 +118,27 @@ namespace Server.State
                     AddToState(response);
                     break;
                 case RequestType.Delete:
-                     DeleteFromState(response);
+                    DeleteFromState(response);
                     break;
                 case RequestType.Update:
-                     UpdateState(response);
+                    UpdateState(response);
                     break;
                 default:
                     return;
             }
         }
 
-        private IResponse ReadFromState(IUserSessionRequest<IUserSessionData> request)
+        private IResponse ReadFromState(IUserSessionData payload)
         {
-            if (request.RequestParams is UserSession)
+            if (payload is UserSession)
             {
                 var sessionData = GetUserSession();
                 return new UserSessionResponse().SetSuccessResponse(sessionData);
             }
+
             var error = new ErrorMessage(ErrorCode.UserSessionNotFound);
             return new UserSessionResponse().SetErrorResponse(error);
         }
-
-        private void ReadAllFromState()
-        {
-
-        }
-
 
         private void UpdateState(IResponse response)
         {
@@ -162,7 +168,5 @@ namespace Server.State
                 _petRepository.Add(pet);
             }
         }
-
     }
-
 }

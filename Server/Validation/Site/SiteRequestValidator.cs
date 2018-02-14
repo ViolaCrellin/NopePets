@@ -20,7 +20,7 @@ namespace Server.Validation.Site
         public bool IsValid(ISiteRequest<ISiteData> request, out ErrorMessage errorMessage)
         {
             errorMessage = null;
-            var requestData = request.RequestParams;
+            var requestData = request.Payload;
 
             if (requestData is UserCredentials)
             {

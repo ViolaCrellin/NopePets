@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
-using Server.MasterData.DTO.Data.Game;
-using Server.MasterData.DTO.Data.Site;
-using Server.MasterData.DTO.Data.User;
+﻿using System.Runtime.Serialization;
 
 namespace Server.MasterData.DTO.Response
 {
@@ -45,7 +41,7 @@ namespace Server.MasterData.DTO.Response
         public IResponse<T> SetErrorResponse(ErrorMessage errorMessage)
         {
             Result = ResponseResult.Failure;
-            DataType = errorMessage.Code.ToString();
+            DataType = nameof(errorMessage.Code);
             Error = errorMessage;
             return this;
         }

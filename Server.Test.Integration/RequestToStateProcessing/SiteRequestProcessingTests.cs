@@ -45,7 +45,7 @@ namespace Server.Test.Integration.RequestToStateProcessing
             var request = new SiteRequest<ISiteData>()
             {
                 RequestType = RequestType.Create,
-                RequestParams = newUser
+                Payload = newUser
             };
 
             IResponse response;
@@ -77,7 +77,7 @@ namespace Server.Test.Integration.RequestToStateProcessing
             var request = new SiteRequest<ISiteData>()
             {
                 RequestType = RequestType.Create,
-                RequestParams = TestData.NewUsers.ValidNewUser
+                Payload = TestData.NewUsers.ValidNewUser
             };
 
             //Act
@@ -113,7 +113,7 @@ namespace Server.Test.Integration.RequestToStateProcessing
             var request = new SiteRequest<ISiteData>()
             {
                 RequestType = RequestType.Read,
-                RequestParams = new UserCredentials()
+                Payload = new UserCredentials()
                 {
                     Email = meJulie.Email,
                     Password = "B1gB@Bylons" //Her password is actually "JungleIsMassive"
@@ -145,7 +145,7 @@ namespace Server.Test.Integration.RequestToStateProcessing
             var request = new SiteRequest<ISiteData>()
             {
                 RequestType = RequestType.Read,
-                RequestParams = new UserCredentials()
+                Payload = new UserCredentials()
                 {
                     Email = TestData.Users.MeJulie.Email,
                     Password = "JungleIsMassive"

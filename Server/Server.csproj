@@ -202,6 +202,7 @@
     <Compile Include="Util\Converters.cs" />
     <Compile Include="Util\Encrypter.cs" />
     <Compile Include="Util\Container.cs" />
+    <Compile Include="Util\GameDataContainer.cs" />
     <Compile Include="Util\PeriodicTask.cs" />
     <Compile Include="SiteService.cs" />
     <Compile Include="Util\TimeSpanExtensions.cs" />

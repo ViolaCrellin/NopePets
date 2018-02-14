@@ -74,7 +74,7 @@ namespace Server.State
 
             if (request.RequestType == RequestType.Read)
             {
-                response = ReadFromState(request.RequestParams);
+                response = ReadFromState(request.Payload);
                 return true;
             }
 
@@ -88,7 +88,7 @@ namespace Server.State
             switch (request.RequestType)
             {
                 case RequestType.Create:
-                    return AddToState(request.RequestParams);
+                    return AddToState(request.Payload);
                 case RequestType.Delete:
                     return DeleteFromState(response);
                 case RequestType.Update:

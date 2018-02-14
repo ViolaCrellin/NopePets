@@ -19,12 +19,14 @@ namespace Server.MasterData.DTO.Request
     }
 
     [DataContract]
-    public class SiteRequest<T> : ISiteRequest<T>
+    public class SiteRequest<T> : ISiteRequest<ISiteData>
     {
         [DataMember]
+        public ISiteData Payload { get; set; }
+
         public RequestType RequestType { get; set; }
-        [DataMember]
-        public T RequestParams { get; set; }
+
+        public Type PayloadType { get; set; }
     }
 
     [DataContract]
