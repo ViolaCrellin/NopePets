@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5958767C-FE61-487D-A214-C22F912A1325}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Server</RootNamespace>
+    <AssemblyName>Server</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.2.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.2.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.2.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.2.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.2.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.0\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\NopePets.mdf" />
+    <Content Include="App_Data\NopePets_log.ldf">
+      <DependentUpon>NopePets.mdf</DependentUpon>
+    </Content>
+    <Content Include="Global.asax" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Builders\ResponseBuilder.cs" />
+    <Compile Include="Builders\NopePetBuilder.cs" />
+    <Compile Include="Builders\PetVitalBuilder.cs" />
+    <Compile Include="Builders\SpeciesBuilder.cs" />
+    <Compile Include="Builders\SpeciesCareActionBuilder.cs" />
+    <Compile Include="Builders\SpeciesVitalBuilder.cs" />
+    <Compile Include="Builders\UserSessionBuilder.cs" />
+    <Compile Include="Configuration\DatabaseConfiguration.cs" />
+    <Compile Include="CORSEnablingBehavior.cs" />
+    <Compile Include="Database\DataPersisters\AnimalMetricPersister.cs" />
+    <Compile Include="Database\DataPersisters\AnimalPersister.cs" />
+    <Compile Include="Database\DataPersisters\InteractionPersister.cs" />
+    <Compile Include="Database\DataPersisters\MetricPersister.cs" />
+    <Compile Include="Database\DataPersisters\PetMetricPersister.cs" />
+    <Compile Include="Database\DataPersisters\PetPersister.cs" />
+    <Compile Include="Database\DataPersisters\UserPersister.cs" />
+    <Compile Include="Database\DataPersisters\Util\CommandBase.cs" />
+    <Compile Include="Database\DataProviders\Util\ColumnInfo.cs" />
+    <Compile Include="Database\DataPersisters\UserPetPersister.cs" />
+    <Compile Include="Database\MetricInteractionPersister.cs" />
+    <Compile Include="GameDataService.cs" />
+    <Compile Include="Database\DataPersisters\IRecordPersister.cs" />
+    <Compile Include="IGameDataService.cs" />
+    <Compile Include="IUserSessionService.cs" />
+    <Compile Include="ISiteService.cs" />
+    <Compile Include="MasterData\DTO\Data\CrossService\SpeciesCareAction.cs" />
+    <Compile Include="MasterData\DTO\Data\Game\AnimalData.cs" />
+    <Compile Include="MasterData\DTO\Data\Game\GameData.cs" />
+    <Compile Include="MasterData\DTO\Data\Game\IGameData.cs" />
+    <Compile Include="MasterData\DTO\Data\Site\ISiteData.cs" />
+    <Compile Include="MasterData\DTO\Data\Site\NewUser.cs" />
+    <Compile Include="MasterData\DTO\Data\Site\MenuData.cs" />
+    <Compile Include="MasterData\DTO\Data\User\NopePet.cs" />
+    <Compile Include="MasterData\DTO\Data\CrossService\SpeciesVital.cs" />
+    <Compile Include="MasterData\DTO\Data\CrossService\Species.cs" />
+    <Compile Include="MasterData\DTO\Data\CrossService\UserCredentials.cs" />
+    <Compile Include="MasterData\DTO\Data\User\UserPetCareAction.cs" />
+    <Compile Include="MasterData\DTO\Data\User\PetVital.cs" />
+    <Compile Include="MasterData\DTO\Data\User\UserProfile.cs" />
+    <Compile Include="MasterData\DTO\Data\User\UserSession.cs" />
+    <Compile Include="MasterData\DTO\Data\User\IUserSessionData.cs" />
+    <Compile Include="MasterData\DTO\Request\IGameDataRequest.cs" />
+    <Compile Include="MasterData\DTO\Request\IRequest.cs" />
+    <Compile Include="MasterData\DTO\Request\ISiteRequest.cs" />
+    <Compile Include="MasterData\DTO\Response\ErrorMessage.cs" />
+    <Compile Include="MasterData\DTO\Request\IUserSessionRequest.cs" />
+    <Compile Include="MasterData\DTO\Response\IGameDataResponse.cs" />
+    <Compile Include="MasterData\DTO\Response\IResponse.cs" />
+    <Compile Include="MasterData\DTO\Response\IUserSessionResponse.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="MasterData\DTO\Response\ISiteResponse.cs" />
+    <Compile Include="MasterData\Model\Animal.cs" />
+    <Compile Include="MasterData\Model\AnimalMetric.cs" />
+    <Compile Include="MasterData\Model\IDatabaseRow.cs" />
+    <Compile Include="MasterData\Model\Metric.cs" />
+    <Compile Include="MasterData\Model\MetricInteraction.cs" />
+    <Compile Include="MasterData\Model\Pet.cs" />
+    <Compile Include="MasterData\Model\Interaction.cs" />
+    <Compile Include="MasterData\Model\PetMetric.cs" />
+    <Compile Include="MasterData\Model\UserPet.cs" />
+    <Compile Include="MasterData\Model\User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Database\DataProviders\Util\DBReader.cs" />
+    <Compile Include="Database\DataPersisters\Util\Persister.cs" />
+    <Compile Include="Database\DataProviders\Util\Query.cs" />
+    <Compile Include="Database\DataProviders\DataProvider.cs" />
+    <Compile Include="RequestProcessors\GameDataRequestProcessor.cs" />
+    <Compile Include="RequestProcessors\IRequestProcessor.cs" />
+    <Compile Include="RequestProcessors\SessionRequestProcessor.cs" />
+    <Compile Include="RequestProcessors\SiteRequestProcessor.cs" />
+    <Compile Include="State\SiteState.cs" />
+    <Compile Include="State\GameDataState.cs" />
+    <Compile Include="State\UserSessionState.cs" />
+    <Compile Include="Storage\IRepository.cs" />
+    <Compile Include="UriRoutes.cs" />
+    <Compile Include="UserSessionService.cs" />
+    <Compile Include="Util\Converters.cs" />
+    <Compile Include="Util\Encrypter.cs" />
+    <Compile Include="Util\Container.cs" />
+    <Compile Include="Util\PeriodicTask.cs" />
+    <Compile Include="SiteService.cs" />
+    <Compile Include="Util\TimeSpanExtensions.cs" />
+    <Compile Include="Util\ActuallyUsefulDatetimeComparer.cs" />
+    <Compile Include="Util\UserSessionContainer.cs" />
+    <Compile Include="Validation\GameDataValidators\GameDataRequestValidator.cs" />
+    <Compile Include="Validation\IValidator.cs" />
+    <Compile Include="Validation\Site\NewUserSessionValidator.cs" />
+    <Compile Include="Validation\UserSession\PetCareActionValidator.cs" />
+    <Compile Include="Validation\UserSession\PetRegistrationValidator.cs" />
+    <Compile Include="Validation\UserSession\UserSessionRequestValidator.cs" />
+    <Compile Include="Validation\Util\NullValueChecker.cs" />
+    <Compile Include="Validation\Util\PasswordValidator.cs" />
+    <Compile Include="Validation\Site\RegistrationValidator.cs" />
+    <Compile Include="Validation\Site\SiteRequestValidator.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>50858</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:50858/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

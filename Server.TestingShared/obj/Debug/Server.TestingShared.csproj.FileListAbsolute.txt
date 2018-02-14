@@ -1,0 +1,10 @@
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\bin\Debug\ApplicationInsights.config
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\bin\Debug\Server.TestingShared.dll
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\bin\Debug\Server.TestingShared.pdb
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\bin\Debug\Server.dll
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\bin\Debug\Server.pdb
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\obj\Debug\Server.TestingShared.csprojResolveAssemblyReference.cache
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\obj\Debug\Server.TestingShared.dll
+C:\Users\Viola Creliin-Davies\Desktop\NopePets\Server.TestingShared\obj\Debug\Server.TestingShared.pdb
